@@ -2,7 +2,7 @@
 services:
   db:
     image: mysql:8.0
-    container_name: login-db
+    container_name: News-Aggregator
     restart: always
     environment:
       MYSQL_DATABASE: login_db
@@ -12,16 +12,16 @@ services:
     volumes:
       - db_data:/var/lib/mysql
     networks:
-      - ecommerce-net
+      - News-Aggregator-net
 
   backend:
     build:
       context: .
       dockerfile: Dockerfile.backend
-    container_name: ecommerce-backend
+    container_name: News-backend
     restart: always
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/ecommerce
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/login_db
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
@@ -30,20 +30,20 @@ services:
     ports:
       - "8081:8081"
     networks:
-      - ecommerce-net
+      - News-Aggregator-net
 
   frontend:
     build:
       context: .
       dockerfile: Dockerfile.frontend
-    container_name: ecommerce-frontend
+    container_name: News-frontend
     restart: always
     ports:
       - "80:80"
     depends_on:
       - backend
     networks:
-      - ecommerce-net
+      - News-Aggregator-net
 
 volumes:
   db_data:
